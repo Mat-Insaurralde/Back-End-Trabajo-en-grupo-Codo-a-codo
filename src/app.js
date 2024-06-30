@@ -17,9 +17,10 @@ const app = express();
              //Puerto del host si no existe usa el 3000
 const PORT = process.env.PORT || 3000;
 
+
 app.use(cors({ origin: process.env.ORIGIN_CORS , methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
-
+app.options('*', cors());
 
 
 app.use(express.json());
