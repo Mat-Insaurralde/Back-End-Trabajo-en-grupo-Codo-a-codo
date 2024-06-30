@@ -18,9 +18,18 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
-app.use(cors({ origin: process.env.ORIGIN_CORS , methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
-app.options('*', cors());
+const corsOptions = {
+    origin: process.env.ORIGIN_CORS,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    optionsSuccessStatus: 200 // algunos navegadores antiguos (IE11, varios SmartTVs) chokan con 204
+  };
+  
+  app.use(cors(corsOptions));
+  
+  app.options('*', cors(corsOptions));
+
 
 
 app.use(express.json());
