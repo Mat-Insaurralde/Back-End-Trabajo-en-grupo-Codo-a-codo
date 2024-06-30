@@ -6,9 +6,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 //Importamos la configuracion del token
 import config from '../config/configJWT.js';
-//Importamos las variables de entoro
-import env from 'dotenv';
-
 
 
 

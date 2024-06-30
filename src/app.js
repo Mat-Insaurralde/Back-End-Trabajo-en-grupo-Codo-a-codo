@@ -1,6 +1,6 @@
 
 import express from "express";
-
+//Importamos variables de entorno
 import 'dotenv/config';
 
 import authRoutes from './routes/authRoutes.js';
@@ -25,6 +25,7 @@ app.use('/auth',authRoutes);
 app.use('/user',verifyTokenMiddleware,userRoutes);
 app.use('/book',verifyTokenMiddleware,bookRoutes);
 
+app.use(cors({ origin: process.env.ORIGIN_CORS , methods: ["GET", "POST", "PUT", "DELETE"], credentials: true }));
 
 
 
