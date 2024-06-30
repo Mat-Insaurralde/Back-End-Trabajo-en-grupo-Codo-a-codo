@@ -2,7 +2,7 @@ import express from 'express';
 
 import bookController from '../controllers/bookController.js';
 
-import verifyTokenMiddleware from "./middlewares/verifyTokenMiddleware.js";
+import verifyTokenMiddleware from "../middlewares/verifyTokenMiddleware.js";
 
 
 const route = express.Router();

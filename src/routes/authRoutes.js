@@ -1,7 +1,6 @@
 
 import  express  from 'express';
 
-import verifyTokenMiddleware from "./middlewares/verifyTokenMiddleware.js";
 
 import  authController from "../controllers/authController.js";
 
