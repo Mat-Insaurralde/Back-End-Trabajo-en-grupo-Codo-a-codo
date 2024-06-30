@@ -24,7 +24,7 @@ app.use(cors({ origin: process.env.ORIGIN_CORS , methods: ["GET", "POST", "PUT",
 
 app.use(express.json());
 
-app.use(express.urlencoded({ extended: true }));
+
 
 app.use('/auth',authRoutes);
 app.use('/user',userRoutes);
