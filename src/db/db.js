@@ -1,6 +1,6 @@
 import mysql from 'mysql2';
 
-import 'dotenv-flow/config';
+import 'dotenv/config';
 
 const connection = mysql.createConnection(
 
