@@ -22,7 +22,7 @@ app.use(express.json());
            
 app.use(express.urlencoded({ extended: true }));
 
-
+console.log(process.env.ORIGIN_CORS);
 
 app.use(
     cors( { 
