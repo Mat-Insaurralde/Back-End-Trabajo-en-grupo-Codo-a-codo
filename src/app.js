@@ -2,7 +2,7 @@ import cors from 'cors';
 
 import express from "express";
 //Importamos variables de entorno
-import env from 'dotenv';
+import 'dotenv-flow/config';
 
 import authRoutes from './routes/authRoutes.js';
 
@@ -10,7 +10,9 @@ import userRoutes from './routes/userRoutes.js'
 
 import bookRoutes from './routes/bookRoutes.js';
 
-env.config();
+
+
+
 
 const PORT = process.env.PORT || 3000;
 
