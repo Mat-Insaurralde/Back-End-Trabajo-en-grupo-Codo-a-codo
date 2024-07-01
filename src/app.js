@@ -24,7 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
     cors( { 
-    origin: [process.env.ORIGIN_CORS, "https://mat-insaurralde.github.io" ],
+    origin: [process.env.ORIGIN_CORS ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     optionsSuccessStatus: 200 // algunos navegadores antiguos (IE11, varios SmartTVs) chokan con 204
