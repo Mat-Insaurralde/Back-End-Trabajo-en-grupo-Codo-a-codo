@@ -2,7 +2,7 @@ import cors from 'cors';
 
 import express from "express";
 //Importamos variables de entorno
-import env from 'dotenv';
+import 'dotenv-flow/config';
 
 import authRoutes from './routes/authRoutes.js';
 
@@ -10,7 +10,7 @@ import userRoutes from './routes/userRoutes.js'
 
 import bookRoutes from './routes/bookRoutes.js';
 
-env.config();
+
 
 const PORT = process.env.PORT || 3000;
 
@@ -21,10 +21,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-
+console.log(process.env.DB_HOST+"aaaaaaaaaa");
 app.use(
+  
     cors( { 
-    origin: [process.env.ORIGIN_CORS, "https://mat-insaurralde.github.io" ],
+    origin: [process.env.ORIGIN_CORS ],
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
     optionsSuccessStatus: 200 // algunos navegadores antiguos (IE11, varios SmartTVs) chokan con 204
