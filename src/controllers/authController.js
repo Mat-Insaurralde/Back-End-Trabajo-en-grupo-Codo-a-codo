@@ -1,3 +1,4 @@
+import { differenceInYears, parseISO } from 'date-fns';
 
 import db from '../db/db.js';
 //Importamos el modulo para manejar JWT
@@ -11,15 +12,30 @@ import config from '../config/configJWT.js';
 
 const register = (req, res) => {
 
-  const { nombre, email, password, edad } = req.body;
+  
+  const { nombre, email,telefono, password1 ,password2, fechaNac } = req.body;
+
 
  //Vefifico que ingrese los datos
- if(!nombre || !email || !password || !edad ) return res.status(400).json({message : 'Faltan datos en el registro'});
+ if(!nombre || !telefono || !email || !password1 || !password2 || !fechaNac ) {
+  return res.status(400).json({message : 'Faltan datos en el registro'});}
+
+if (!password1 === password2)  return res.status(400).json({message : 'Las contraseñas no coinciden'});
+
+const fecha_nacimiento = parseISO(fechaNac);
+
+const fechaActual = new Date();
 
 
-  const contrasena = bcrypt.hashSync(password, 8);
+if (differenceInYears(fechaActual,fecha_nacimiento)<15) {
+  return res.status(400).json({message : 'La edad minima para registrarse es de 15'});}
 
-  const sql = 'INSERT INTO usuarios ( nombre , email , contrasena , edad ) VALUES ( ?  , ?  , ? , ? ); ';
+
+
+
+  const contrasena = bcrypt.hashSync(password1, 8);
+
+  const sql = 'INSERT INTO usuarios ( nombre , email ,telefono , contrasena ,fecha_nacimiento  ) VALUES ( ?  , ?  , ? , ? ,?); ';
 
 
 
@@ -27,7 +43,7 @@ const register = (req, res) => {
 
     sql,
 
-    [nombre, email, contrasena, edad],
+    [nombre, email, telefono, contrasena, fecha_nacimiento],
 
     (err, result) => {
 

@@ -2,6 +2,8 @@ import mysql from 'mysql2';
 
 import 'dotenv-flow/config';
 
+
+
 const connection = mysql.createConnection(
 
  
@@ -61,9 +63,10 @@ connection.connect((error) => {
 CREATE TABLE IF NOT EXISTS usuarios (
 id INT AUTO_INCREMENT PRIMARY KEY,
 nombre VARCHAR(100) NOT NULL,
+telefono VARCHAR(20) NOT NULL,
 email VARCHAR(100) NOT NULL UNIQUE,
 contrasena VARCHAR(255) NOT NULL, 
-edad INT NOT NULL
+fecha_nacimiento DATE NOT NULL
 
 );
 
