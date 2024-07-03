@@ -9,26 +9,27 @@ import bcrypt from 'bcryptjs';
 import config from '../config/configJWT.js';
 
 
-
 const register = (req, res) => {
 
-  
-  const { nombre, email,telefono, password1 ,password2, fechaNac } = req.body;
+
+  const { nombre, email, telefono, password1, password2, fechaNac } = req.body;
 
 
- //Vefifico que ingrese los datos
- if(!nombre || !telefono || !email || !password1 || !password2 || !fechaNac ) {
-  return res.status(400).json({message : 'Faltan datos en el registro'});}
+  //Vefifico que ingrese los datos
+  if (!nombre || !telefono || !email || !password1 || !password2 || !fechaNac) {
+    return res.status(400).json({ message: 'Faltan datos en el registro' });
+  }
 
-if (!password1 === password2)  return res.status(400).json({message : 'Las contraseñas no coinciden'});
+  if (!password1 === password2) return res.status(400).json({ message: 'Las contraseñas no coinciden' });
 
-const fecha_nacimiento = parseISO(fechaNac);
+  const fecha_nacimiento = parseISO(fechaNac);
 
-const fechaActual = new Date();
+  const fechaActual = new Date();
 
 
-if (differenceInYears(fechaActual,fecha_nacimiento)<15) {
-  return res.status(400).json({message : 'La edad minima para registrarse es de 15'});}
+  if (differenceInYears(fechaActual, fecha_nacimiento) < 15) {
+    return res.status(400).json({ message: 'La edad minima para registrarse es de 15' });
+  }
 
 
 
@@ -59,8 +60,17 @@ if (differenceInYears(fechaActual,fecha_nacimiento)<15) {
       //genera un token JWT para el nuevo usuario    // `result.insertId` contiene el ID del nuevo usuario insertado
       const token = jwt.sign({ id: result.insertId }, config.secretKey, { expiresIn: config.tokenExpiresIn });
 
+
       //Envia el token como respuesta al cliente
-      res.status(201).json({ message: 'Usuario creado!', usuarioId: result.insertId , auth: true, token  });
+      res     //El nombre de la cookie
+        .cookie('access_token', token, {
+          httpOnly: true, //Evita que la cookie pueda ser accedida desde JavaScript , solo se accede a la cookie desde el servidor
+          secure: false, //Evita que la cookie sea enviada por un protocolo no seguro
+          sameSite: 'strict', //Solo se puede acceder a la cookie desde el mismo dominio 
+          maxAge: 1000 * 60 * 60 //La cookie tiene tiempo de validez de una hora
+        })
+        .status(201)
+        .json({ message: 'Usuario creado!', usuarioId: result.insertId, auth: true, token });
 
 
     });
@@ -74,7 +84,7 @@ const login = (req, res) => {
   const { email, password } = req.body;
 
   //Vefifico que ingrese los datos
-  if(!email || !password) return res.status(400).json({message : 'email o contraseña no ingresados'});
+  if (!email || !password) return res.status(400).json({ message: 'email o contraseña no ingresados' });
 
   const sql = 'SELECT * FROM usuarios WHERE email = ? ;';
 
@@ -102,21 +112,39 @@ const login = (req, res) => {
       if (!passwordIsValid) return res.status(401).json({ auth: false, token: null });
 
 
-     //Genera un token usando el id del usuario
-      const token = jwt.sign({id:user.id},config.secretKey,{expiresIn:config.tokenExpiresIn});
-        
-      res.status(200).json({auth:true,token});
+      //Genera un token usando el id del usuario
+      const token = jwt.sign({ id: user.id, nombre: user.nombre }, config.secretKey, { expiresIn: config.tokenExpiresIn });
+
+
+      res.cookie('access_token', token, {
+        httpOnly: true,
+        secure: false, // Asegúrate de que esté en false para desarrollo en HTTP
+        sameSite: 'strict',
+        maxAge: 1000 * 60 * 60 // 1 hora
+      })
+        .status(200)
+        .json({ auth: true, token });
 
     });
-
-
-
 
 };
 
 
+
+const logout = (req, res) => {
+
+  res.clearCookie('access_token')
+    .status(200)
+    .json({ message: 'Logout exitoso' });
+
+};
+
+
+
+
 export default {
   register,
-  login
+  login,
+  logout
 
 };

@@ -8,16 +8,18 @@ import configJWT from '../config/configJWT.js';
 export default  (req,res,next) => {
 
 //Obtiene el token del encabezado de autorizacion
-const authheader = req.headers['authorization'];
+const authHeader  = req.cookies.acces_token;
 
-if(!authheader) return res.status(400).send({auth:false,message:'No se encontro el token'})
+
+
+if(!authHeader) return res.status(400).send({auth:false,message:'No se encontro el token'})
 
 
 
 //Extrae el encabezado del token (formato barer <token>)    
-const token = authheader.split(' ')[1];
+const token = authHeader.split(' ')[1];
 
-if (!token) return res.status(403).send({ auth: false , message : 'token malformado'}); 
+if (!token) return res.status(403).send({ auth: false , message : 'Acceso no autorizado'}); 
 
 
 jwt.verify(token , configJWT.secretKey , (err,decoded)=>{
