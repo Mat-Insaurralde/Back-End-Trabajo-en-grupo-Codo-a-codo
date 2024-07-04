@@ -1,6 +1,6 @@
 import db from '../db/db.js'
 
-
+   
 
 const getAllUsers = async (req, res) => {
 
@@ -278,7 +278,7 @@ const getFavorites = async (req, res) => {
 
 const deleteFavorite = async (req, res) => {
 
-  const { usuarioId, libroId } = req.params;
+  const { usuarioId, libroId } = req.body;
 
   db.query('DELETE FROM favoritos WHERE usuario_id = ? AND libro_id = ?',
     
@@ -291,7 +291,7 @@ const deleteFavorite = async (req, res) => {
      }
    
      if (results.affectedRows === 0) {
-      return res.status(404).send('No se encontró el favorito para eliminar'); // No se encontró el favorito
+      return res.status(404).send({message: "Nose ah encontrado el favorito a eliminar"}); // No se encontró el favorito
     }
 
     res.status(200).send({message: "Se ha eliminado de favoritos"}); 

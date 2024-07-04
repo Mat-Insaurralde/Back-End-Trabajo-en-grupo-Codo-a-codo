@@ -5,9 +5,6 @@ import 'dotenv-flow/config';
 
 
 const connection = mysql.createConnection(
-
-
-
   {
     host: process.env.DB_HOST,
     port: process.env.DB_PORT,
@@ -15,7 +12,6 @@ const connection = mysql.createConnection(
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
   }
-
 );
 
 
