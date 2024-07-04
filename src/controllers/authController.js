@@ -20,7 +20,7 @@ const register = (req, res) => {
     return res.status(400).json({ message: 'Faltan datos en el registro' });
   }
 
-  if (!password1 === password2) return res.status(400).json({ message: 'Las contraseñas no coinciden' });
+  if (!(password1===password2)) return res.status(400).json({ message: 'Las contraseñas no coinciden' });
 
   const fecha_nacimiento = parseISO(fechaNac);
 
