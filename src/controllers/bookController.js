@@ -6,7 +6,7 @@ const createBook =  (req, res) => {
 
     const { titulo, autor, anio, tapa } = req.body;
 
-    console.log(titulo,tapa);
+  
 
     //Vefifico que ingrese los datos
     if (!titulo || !autor || !anio || !tapa) return res.status(400).json({ message: 'Faltan datos en el registro' });

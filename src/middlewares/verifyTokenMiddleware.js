@@ -8,7 +8,7 @@ import configJWT from '../config/configJWT.js';
 export default  (req,res,next) => {
 
 //Obtiene el token del encabezado de autorizacion
-const authHeader  = req.cookies.acces_token;
+const authHeader  = req.cookies.access_token;
 
 
 
@@ -16,8 +16,12 @@ if(!authHeader) return res.status(400).send({auth:false,message:'No se encontro 
 
 
 
-//Extrae el encabezado del token (formato barer <token>)    
-const token = authHeader.split(' ')[1];
+const token = authHeader;
+// Verificar si el token tiene el prefijo 'Bearer '
+if (token.startsWith('Bearer ')) {
+    token = token.slice(7); // Eliminar 'Bearer ' del inicio del token
+  }
+  
 
 if (!token) return res.status(403).send({ auth: false , message : 'Acceso no autorizado'}); 
 

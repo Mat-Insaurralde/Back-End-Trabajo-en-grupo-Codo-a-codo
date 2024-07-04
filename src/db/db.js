@@ -6,7 +6,7 @@ import 'dotenv-flow/config';
 
 const connection = mysql.createConnection(
 
- 
+
 
   {
     host: process.env.DB_HOST,
@@ -14,7 +14,7 @@ const connection = mysql.createConnection(
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
     database: process.env.DB_NAME
-  } 
+  }
 
 );
 
@@ -72,19 +72,6 @@ fecha_nacimiento DATE NOT NULL
 
 `;
 
-    connection.query(createTableUsers, (error, results) => {
-
-      if (error) {
-        console.log('Error al crear la tabla: ', error);
-        return;
-      }
-
-      console.log('Tabla Usuarios creada/existente!');
-
-    });
-
-
-    
     const createTableBooks = `
 
 CREATE TABLE IF NOT EXISTS libros (
@@ -97,16 +84,58 @@ tapa VARCHAR(200) NOT NULL
  
 `;
 
-connection.query(createTableBooks, 
-  (error, results) => {
-    if (error) {
-      console.log('Error al crear la tabla: ', error);
-      return;
-    }
+    const createFavoritesTable = `
 
-    console.log('Tabla libros creada/existente!');
-  }
+CREATE TABLE IF NOT EXISTS favoritos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  usuario_id INT,
+  libro_id INT,
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
+  FOREIGN KEY (libro_id) REFERENCES libros(id),
+  UNIQUE KEY unique_favorito (usuario_id, libro_id)
 );
+
+`;
+
+
+    connection.query(createTableUsers, (error, results) => {
+
+      if (error) {
+        console.log('Error al crear la tabla: ', error);
+        return;
+      }
+
+      console.log('Tabla Usuarios creada/existente!');
+
+    });
+
+
+
+    connection.query(createTableBooks,
+      (error, results) => {
+        if (error) {
+          console.log('Error al crear la tabla: ', error);
+          return;
+        }
+
+        console.log('Tabla libros creada/existente!');
+      }
+    );
+
+
+
+    connection.query(createFavoritesTable,
+      (error, results) => {
+        if (error) {
+          console.log('Error al crear la tabla: ', error);
+          return;
+        }
+
+        console.log('Tabla favoritos creada/existente!');
+      }
+    );
+
+
 
 
 

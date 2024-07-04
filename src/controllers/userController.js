@@ -17,7 +17,7 @@ const getAllUsers = async (req, res) => {
     }
 
     // Si todo va bien
-    res.status(200).json({ usuarios : results });
+    res.status(200).json({ usuarios: results });
   });
 };
 
@@ -46,8 +46,8 @@ const deleteUser = async (req, res) => {
       }
 
 
-      if (results.affectedRows === 0)  return res.status(404).json({ mensaje: "Usuario no encontrado" });
-      
+      if (results.affectedRows === 0) return res.status(404).json({ mensaje: "Usuario no encontrado" });
+
 
 
       // Si todo va bien
@@ -65,8 +65,8 @@ const updateUser = async (req, res) => {
 
   const { nombre, email, edad } = req.body;
 
- //Vefifico que ingrese los datos
- if(!nombre && !email &&  !edad ) return res.status(400).json({message : 'Faltan datos para la actualizacion'});
+  //Vefifico que ingrese los datos
+  if (!nombre && !email && !edad) return res.status(400).json({ message: 'Faltan datos para la actualizacion' });
 
   // Construir dinámicamente la consulta SQL y los valores
   const consulta = [];
@@ -105,7 +105,7 @@ const updateUser = async (req, res) => {
         return;
       }
 
-      if (results.affectedRows === 0)  return res.status(404).json({ mensaje: "Usuario no encontrado" });
+      if (results.affectedRows === 0) return res.status(404).json({ mensaje: "Usuario no encontrado" });
 
       // Si todo va bien
       res.status(200).json({ mensaje: "Usuario actualizado!" });
@@ -119,31 +119,166 @@ const getUserById = async (req, res) => {
 
   const { id } = req.params;
 
-  
+
   const sql = 'SELECT * FROM usuarios WHERE id = ?;';
 
   db.query(
     sql,
 
     [id],
-    
-    (err,results)=>{
 
-    if(err){
-      console.error('Error al obtener el usuario:', err);
-      res.status(500).send('Infernar Server Error');
-      return;
-    }
+    (err, results) => {
 
-    if( results.length === 0 )  res.status(404).send({ "error": "No se encontró el usuario" });
-    
-   
-    
-     res.status(200).json({nombre:results[0].nombre,edad:results[0].edad});
+      if (err) {
+        console.error('Error al obtener el usuario:', err);
+        res.status(500).send('Infernar Server Error');
+        return;
+      }
+
+      if (results.length === 0) res.status(404).send({ "error": "No se encontró el usuario" });
+
+
+
+      res.status(200).json({ nombre: results[0].nombre, edad: results[0].edad });
 
 
     });
-  };
+};
+
+
+//METODO GUARDADO DE LIBRO FAVORITO
+
+const addFavorite = async (req, res) => {
+
+  const { email, libroId } = req.body;
+
+  if (!email, !libroId) return res.status(400).json({ message: "Faltan datos" });
+
+
+
+  db.query('SELECT id FROM usuarios WHERE email = ? ',
+
+    [email],
+
+    (err, userResults) => {
+
+      if (err) {
+        return res.status(500).send(err.message);
+      }
+
+
+      if (userResults.length === 0) {
+        return res.status(404).send('Usuario no encontrado');
+      }
+
+
+      const usuarioId = userResults[0].id;
+
+      db.query('SELECT id FROM libros WHERE id = ?',
+
+        [libroId],
+
+        (err, bookResults) => {
+
+          if (err) {
+            return res.status(500).send(err.message);
+          }
+          if (bookResults.length === 0) {
+            return res.status(404).send('Libro no encontrado');
+          }
+
+        });
+
+      db.query('SELECT * FROM favoritos WHERE usuario_id = ? AND libro_id = ?',
+
+        [usuarioId, libroId],
+
+        (err, favoriteResults) => {
+
+          if (err) {
+            return res.status(500).send(err.message);
+          }
+
+          if (favoriteResults.length > 0) {
+            return res.status(400).send('El libro ya está en favoritos');
+          }
+
+
+
+
+          db.query('INSERT INTO favoritos (usuario_id, libro_id) VALUES (?, ?)',
+
+            [usuarioId, libroId],
+
+            (err, result) => {
+
+              if (err) {
+                return res.status(500).send(err.message);
+              }
+              res.status(200).send('Libro añadido a favoritos');
+
+
+
+            });
+
+        });
+
+
+
+    });
+
+};
+
+
+
+//METODO BUSCAR LIBROS FAVORITOS
+
+
+const getFavorites = async (req, res) => {
+
+  const { id } = req.params;
+
+  db.query('SELECT id FROM usuarios WHERE id = ?',
+
+    [id],
+
+    (err, userResults) => {
+
+      if (err) {
+        return res.status(500).send(err.message);
+      }
+      if (userResults.length === 0) {
+        return res.status(404).send('Usuario no encontrado');
+      }
+
+      const usarioId = userResults[0].id;
+
+      db.query('SELECT libros.* FROM libros JOIN favoritos ON libros.id = favoritos.libro_id WHERE favoritos.usuario_id = ?',
+        [usarioId],
+
+        (err, results) => {
+
+          if (err) {
+            return res.status(500).send(err.message);
+          }
+
+          if (results == 0) return res.status(404).send('No hay libros favoritos');
+
+
+          res.status(200).json({ librosFavoritos: results });
+
+        });
+
+    });
+};
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +286,8 @@ export default {
   updateUser,
   deleteUser,
   getAllUsers,
-  getUserById
+  getUserById,
+  addFavorite,
+  getFavorites
 };
 

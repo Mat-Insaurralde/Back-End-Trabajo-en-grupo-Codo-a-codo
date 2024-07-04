@@ -10,5 +10,10 @@ router.put('/:id',verifyTokenMiddleware,userController.updateUser);
 router.get('/',userController.getAllUsers );
 router.get('/:id', userController.getUserById);
 router.delete('/:id',verifyTokenMiddleware, userController.deleteUser);
+router.post('/favorite',userController.addFavorite);
+router.get('/favorites/:id',userController.getFavorites);
+
+
+
 
 export default router;
