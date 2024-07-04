@@ -12,6 +12,8 @@ import bookRoutes from './routes/bookRoutes.js';
 
 import cookieParser from 'cookie-parser';
 
+import verifyTokenMiddleware from './middlewares/verifyTokenMiddleware.js';
+
 
 
 
@@ -35,7 +37,7 @@ app.use(
 
 
 app.use('/auth',authRoutes);
-app.use('/user',userRoutes);
+app.use('/user', verifyTokenMiddleware ,userRoutes);
 app.use('/book',bookRoutes);
 
 
