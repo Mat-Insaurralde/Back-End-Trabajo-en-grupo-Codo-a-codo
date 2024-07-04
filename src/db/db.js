@@ -87,12 +87,14 @@ tapa VARCHAR(200) NOT NULL
     const createFavoritesTable = `
 
 CREATE TABLE IF NOT EXISTS favoritos (
+
   id INT AUTO_INCREMENT PRIMARY KEY,
   usuario_id INT,
   libro_id INT,
   FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
   FOREIGN KEY (libro_id) REFERENCES libros(id),
   UNIQUE KEY unique_favorito (usuario_id, libro_id)
+
 );
 
 `;

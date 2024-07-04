@@ -273,9 +273,31 @@ const getFavorites = async (req, res) => {
 };
 
 
+//METODO ELIMINAR LIBRO DE FAVORITO
 
 
+const deleteFavorite = async (req, res) => {
 
+  const { usuarioId, libroId } = req.params;
+
+  db.query('DELETE FROM favoritos WHERE usuario_id = ? AND libro_id = ?',
+    
+    [usuarioId, libroId],
+    
+    (err, results) => {
+    
+      if (err) {
+      return res.status(500).send(err.message); 
+     }
+   
+     if (results.affectedRows === 0) {
+      return res.status(404).send('No se encontró el favorito para eliminar'); // No se encontró el favorito
+    }
+
+    res.status(200).send({message: "Se ha eliminado de favoritos"}); 
+  });
+
+};
 
 
 
@@ -288,6 +310,7 @@ export default {
   getAllUsers,
   getUserById,
   addFavorite,
-  getFavorites
+  getFavorites,
+  deleteFavorite
 };
 
