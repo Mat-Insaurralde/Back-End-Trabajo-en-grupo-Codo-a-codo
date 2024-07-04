@@ -278,8 +278,11 @@ const getFavorites = async (req, res) => {
 
 const deleteFavorite = async (req, res) => {
 
-  const { usuarioId, libroId } = req.body;
+   const { usuarioId } = req.params;
 
+  const { libroId } = req.body;
+
+  
   db.query('DELETE FROM favoritos WHERE usuario_id = ? AND libro_id = ?',
     
     [usuarioId, libroId],

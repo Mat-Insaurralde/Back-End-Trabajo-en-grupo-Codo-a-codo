@@ -12,7 +12,7 @@ router.get('/:id', userController.getUserById);
 router.delete('/:id',  userController.deleteUser);
 router.post('/favorite', userController.addFavorite);
 router.get('/favorites/:id', userController.getFavorites);
-router.delete('/favorites', userController.deleteFavorite);
+router.delete('/favorite/:idUser', userController.deleteFavorite);
 
 
 
